@@ -15,8 +15,19 @@ jobs:
     - name: Instalar dependências
       run: sudo apt update && sudo apt install -y perl git curl unzip xz-utils make clang lld dpkg-dev
 
-    - name: Clonar Theos (fork de kabiroberai)
-      run: git clone --recursive https://github.com/kabiroberai/theos.git $HOME/theos
+    - name: Clonar Theos (repositório oficial)
+      run: git clone --recursive https://github.com/theos/theos.git $HOME/theos
+
+    - name: Copiar scripts do repositório para $THEOS/bin
+      run: |
+        mkdir -p $HOME/theos/bin
+        cp $GITHUB_WORKSPACE/dm.pl $HOME/theos/bin/
+        cp $GITHUB_WORKSPACE/denic.pl $HOME/theos/bin/
+        cp $GITHUB_WORKSPACE/logify.pl $HOME/theos/bin/
+        cp $GITHUB_WORKSPACE/nic.pl $HOME/theos/bin/
+        cp $GITHUB_WORKSPACE/nicify.pl $HOME/theos/bin/
+        cp $GITHUB_WORKSPACE/logos.pl $HOME/theos/bin/
+        chmod +x $HOME/theos/bin/*.pl
 
     - name: Baixar SDK iPhoneOS16.5
       run: |
