@@ -15,19 +15,13 @@ jobs:
     - name: Instalar dependências
       run: sudo apt update && sudo apt install -y perl git curl unzip xz-utils make clang lld dpkg-dev
 
-    - name: Clonar Theos
-      run: git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
-
-    - name: Baixar scripts essenciais do Theos
+    - name: Descompactar Theos do zip local
       run: |
-        cd $HOME/theos/bin
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/dm.pl
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/denic.pl
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/logify.pl
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/nic.pl
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/nicify.pl
-        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/logos.pl
-        chmod +x *.pl
+        unzip theos.zip -d $HOME
+        # Se dentro do zip está a pasta theos-master, renomeie para theos
+        if [ -d "$HOME/theos-master" ]; then
+          mv $HOME/theos-master $HOME/theos
+        fi
 
     - name: Baixar SDK iPhoneOS16.5
       run: |
