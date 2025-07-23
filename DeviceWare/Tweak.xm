@@ -1,10 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <substrate.h>
 
-// Troque aqui pelo nome real da classe principal do Free Fire Max
-// Se não souber, pode tentar UIApplication ou AppDelegate padrão para começar
-#define TARGET_CLASS_NAME @"AppDelegate"
-
 static void (*orig_applicationDidFinishLaunching)(id self, SEL _cmd, id application);
 
 static void new_applicationDidFinishLaunching(id self, SEL _cmd, id application) {
@@ -16,15 +12,9 @@ static void new_applicationDidFinishLaunching(id self, SEL _cmd, id application)
 }
 
 __attribute__((constructor)) static void tweak_init() {
-    Class targetClass = objc_getClass(TARGET_CLASS_NAME);
-    if (targetClass) {
-        MSHookMessageEx(targetClass, @selector(applicationDidFinishLaunching:), (IMP)new_applicationDidFinishLaunching, (IMP *)&orig_applicationDidFinishLaunching);
-    } else {
-        // fallback, hook UIApplicationDelegate se não achar
-        Class appDelegate = objc_getClass("UIApplicationDelegate");
-        if (appDelegate) {
-            MSHookMessageEx(appDelegate, @selector(applicationDidFinishLaunching:), (IMP)new_applicationDidFinishLaunching, (IMP *)&orig_applicationDidFinishLaunching);
-        }
+    Class appDelegate = objc_getClass("UIApplicationDelegate");
+    if (appDelegate) {
+        MSHookMessageEx(appDelegate, @selector(applicationDidFinishLaunching:), (IMP)new_applicationDidFinishLaunching, (IMP *)&orig_applicationDidFinishLaunching);
     }
 }
 
