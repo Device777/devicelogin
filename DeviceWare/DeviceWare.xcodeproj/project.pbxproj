@@ -1,0 +1,143 @@
+// !\$*UTF8*\$!
+{
+  archiveVersion = 1;
+  classes = {
+  };
+  objectVersion = 55;
+  objects = {
+
+/* Begin PBXBuildFile section */
+    1B6058900D05DD3D006BFB54 /* Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B60588F0D05DD3D006BFB54 /* Tweak.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+    1B60588F0D05DD3D006BFB54 /* Tweak.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tweak.m; sourceTree = "<group>"; };
+    1B6058900D05DD3D006BFB55 /* DeviceWare */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DeviceWare.framework; sourceTree = "<group>"; };
+    1B6058900D05DD3D006BFB56 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+    1B6058900D05DD3D006BFB57 /* Frameworks */ = {
+      isa = PBXFrameworksBuildPhase;
+      buildActionMask = 2147483647;
+      files = (
+      );
+      runOnlyForDeploymentPostprocessing = 0;
+    };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+    1B6058900D05DD3D006BFB58 = {
+      isa = PBXGroup;
+      children = (
+        1B60588F0D05DD3D006BFB54 /* Tweak.m */,
+      );
+      sourceTree = "<group>";
+    };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+    1B6058900D05DD3D006BFB59 /* DeviceWare */ = {
+      isa = PBXNativeTarget;
+      buildConfigurationList = 1B60588E0D05DD3D006BFB53 /* Build configuration list for PBXNativeTarget "DeviceWare" */;
+      buildPhases = (
+        1B6058900D05DD3D006BFB57 /* Frameworks */,
+        1B6058900D05DD3D006BFB54 /* Sources */,
+      );
+      dependencies = (
+      );
+      name = DeviceWare;
+      productName = DeviceWare;
+      productReference = 1B6058900D05DD3D006BFB55 /* DeviceWare */;
+      productType = "com.apple.product-type.library.dynamic";
+    };
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+    1B60588E0D05DD3D006BFB52 /* Project object */ = {
+      isa = PBXProject;
+      attributes = {
+        LastUpgradeCheck = 1310;
+      };
+      buildConfigurationList = 1B60588E0D05DD3D006BFB51 /* Build configuration list for PBXProject "DeviceWare" */;
+      compatibilityVersion = "Xcode 13.0";
+      developmentRegion = en;
+      hasScannedForEncodings = 0;
+      knownRegions = (
+        en,
+      );
+      mainGroup = 1B6058900D05DD3D006BFB58;
+      productRefGroup = 1B6058900D05DD3D006BFB58;
+      projectDirPath = "";
+      targets = (
+        1B6058900D05DD3D006BFB59 /* DeviceWare */,
+      );
+    };
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+    1B60588F0D05DD3D006BFB50 /* Debug */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        ARCHS = arm64;
+        BASESDK = iphoneos;
+        CODE_SIGN_IDENTITY = "";
+        CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+        DEBUG_INFORMATION_FORMAT = dwarf;
+        ENABLE_NS_ASSERTIONS = YES;
+        INFOPLIST_FILE = "";
+        LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
+        MACOSX_DEPLOYMENT_TARGET = "";
+        MTL_ENABLE_DEBUG_INFO = NO;
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SKIP_INSTALL = YES;
+        TARGETED_DEVICE_FAMILY = 1,2;
+      };
+      name = Debug;
+    };
+    1B60588E0D05DD3D006BFB51 /* Release */ = {
+      isa = XCBuildConfiguration;
+      buildSettings = {
+        ARCHS = arm64;
+        BASESDK = iphoneos;
+        CODE_SIGN_IDENTITY = "";
+        CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
+        DEBUG_INFORMATION_FORMAT = dwarf;
+        ENABLE_NS_ASSERTIONS = NO;
+        INFOPLIST_FILE = "";
+        LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
+        MACOSX_DEPLOYMENT_TARGET = "";
+        MTL_ENABLE_DEBUG_INFO = NO;
+        PRODUCT_NAME = "$(TARGET_NAME)";
+        SDKROOT = iphoneos;
+        SKIP_INSTALL = YES;
+        TARGETED_DEVICE_FAMILY = 1,2;
+      };
+      name = Release;
+    };
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+    1B60588E0D05DD3D006BFB51 /* Build configuration list for PBXProject "DeviceWare" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        1B60588F0D05DD3D006BFB50 /* Debug */,
+        1B60588E0D05DD3D006BFB51 /* Release */,
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+    1B60588E0D05DD3D006BFB53 /* Build configuration list for PBXNativeTarget "DeviceWare" */ = {
+      isa = XCConfigurationList;
+      buildConfigurations = (
+        1B60588F0D05DD3D006BFB50 /* Debug */,
+        1B60588E0D05DD3D006BFB51 /* Release */,
+      );
+      defaultConfigurationIsVisible = 0;
+      defaultConfigurationName = Release;
+    };
+/* End XCConfigurationList section */
+  };
+  rootObject = 1B60588E0D05DD3D006BFB52 /* Project object */;
+}
