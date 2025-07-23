@@ -1,4 +1,4 @@
-name: Build DeviceWare
+name: Build DeviceWare (macOS runner)
 
 on:
   push:
@@ -6,60 +6,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
-    - name: Checkout do repositório
+    - name: Checkout do código
       uses: actions/checkout@v4
 
-    - name: Instalar dependências básicas
-      run: sudo apt-get update && sudo apt-get install -y \
-        git build-essential curl clang libssl-dev libz-dev libbz2-dev libncurses5-dev libsqlite3-dev
-
-    - name: Clonar e configurar osxcross
+    - name: Build dylib com xcodebuild
       run: |
-        OSXCROSS_ROOT=$RUNNER_TEMP/osxcross
-        git clone https://github.com/tpoechtrager/osxcross.git $OSXCROSS_ROOT
-        cd $OSXCROSS_ROOT
-        curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/12.4/MacOSX12.4.sdk.tar.xz
-        mv MacOSX12.4.sdk.tar.xz tarballs/
-        UNATTENDED=1 ./build.sh
-      shell: bash
-
-    - name: Clonar Theos oficial
-      run: git clone --recursive https://github.com/theos/theos.git $HOME/theos
-
-    - name: Baixar SDK iPhoneOS16.5 para Theos
-      run: |
-        mkdir -p $HOME/theos/sdks
-        curl -L -o $HOME/theos/sdks/iPhoneOS16.5.sdk.tar.xz https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS16.5.sdk.tar.xz
-        tar -xf $HOME/theos/sdks/iPhoneOS16.5.sdk.tar.xz -C $HOME/theos/sdks
-
-    - name: Instalar ldid
-      run: |
-        curl -L -o ldid https://github.com/opa334/ldid/releases/latest/download/ldid_linux_x86_64
-        chmod +x ldid
-        sudo mv ldid /usr/local/bin/
-
-    - name: Copiar scripts do Theos para $HOME/theos/bin
-      run: |
-        mkdir -p $HOME/theos/bin
-        cp $GITHUB_WORKSPACE/dm.pl $HOME/theos/bin/
-        cp $GITHUB_WORKSPACE/denic.pl $HOME/theos/bin/
-        cp $GITHUB_WORKSPACE/logify.pl $HOME/theos/bin/
-        cp $GITHUB_WORKSPACE/nic.pl $HOME/theos/bin/
-        cp $GITHUB_WORKSPACE/nicify.pl $HOME/theos/bin/
-        cp $GITHUB_WORKSPACE/logos.pl $HOME/theos/bin/
-        chmod +x $HOME/theos/bin/*.pl
-
-    - name: Configurar variáveis de ambiente para Theos + osxcross e build
-      run: |
-        OSXCROSS_ROOT=$RUNNER_TEMP/osxcross
-        export THEOS=$HOME/theos
-        export PATH=$THEOS/bin:$PATH
-        export THEOS_TOOLCHAIN=$OSXCROSS_ROOT
-        export CC=$OSXCROSS_ROOT/target/bin/o64-clang
-        export CXX=$OSXCROSS_ROOT/target/bin/o64-clang++
         cd DeviceWare
-        make clean package
-      shell: bash
+        xcodebuild -scheme DeviceWare -configuration Release clean build \
+          -sdk iphoneos \
+          -arch arm64 \
+          BUILD_DIR=build
+
+    - name: Upload do artefato
+      uses: actions/upload-artifact@v3
+      with:
+        name: DeviceWare-dylib
+        path: DeviceWare/build/Release-iphoneos/DeviceWare.dylib
