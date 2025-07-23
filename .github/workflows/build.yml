@@ -12,16 +12,14 @@ jobs:
     - name: Checkout do repositório
       uses: actions/checkout@v4
 
-    - name: Instalar dependências
+    - name: Instalar dependências do sistema
       run: sudo apt update && sudo apt install -y perl git curl unzip xz-utils make clang lld dpkg-dev
 
     - name: Descompactar Theos do zip local
-      run: |
-        unzip theos.zip -d $HOME
-        # Se dentro do zip está a pasta theos-master, renomeie para theos
-        if [ -d "$HOME/theos-master" ]; then
-          mv $HOME/theos-master $HOME/theos
-        fi
+      run: unzip theos.zip -d $HOME
+
+    - name: Atualizar dependências do Theos
+      run: $HOME/theos/bin/update-theos
 
     - name: Baixar SDK iPhoneOS16.5
       run: |
