@@ -1,4 +1,4 @@
-name: Build DeviceWare (macOS runner)
+name: Build DeviceWare
 
 on:
   push:
@@ -9,19 +9,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout do código
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Build dylib com xcodebuild
+    - name: Build tweak with xcodebuild
       run: |
         cd DeviceWare
-        xcodebuild -scheme DeviceWare -configuration Release clean build \
-          -sdk iphoneos \
-          -arch arm64 \
-          BUILD_DIR=build
-
-    - name: Upload do artefato
-      uses: actions/upload-artifact@v4
-      with:
-        name: DeviceWare-dylib
-        path: DeviceWare/build/Release-iphoneos/DeviceWare.dylib
+        xcodebuild -scheme DeviceWare -configuration Release -sdk iphoneos -arch arm64 BUILD_DIR=build clean build
