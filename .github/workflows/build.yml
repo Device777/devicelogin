@@ -16,7 +16,7 @@ jobs:
     - name: Install dependencies and ldid
       run: |
         sudo apt-get update
-        sudo apt-get install -y clang make git curl
+        sudo apt-get install -y clang make git curl perl
         curl -L -o ldid https://github.com/theos/ldid/releases/latest/download/ldid-linux-amd64
         chmod +x ldid
         sudo mv ldid /usr/local/bin/
@@ -24,6 +24,7 @@ jobs:
     - name: Download Theos
       run: |
         git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
+        chmod +x $HOME/theos/bin/*
         echo "THEOS=$HOME/theos" >> $GITHUB_ENV
         echo "PATH=$HOME/theos/bin:$PATH" >> $GITHUB_ENV
 
