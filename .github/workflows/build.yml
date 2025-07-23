@@ -1,50 +1,43 @@
-name: Build DeviceWare dylib
+name: Build .dylib
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      THEOS: ${{ github.workspace }}/theos
-      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
-
     steps:
-    - name: Clonar projeto
-      uses: actions/checkout@v4
+      - name: Checkout repositório
+        uses: actions/checkout@v4
 
-    - name: Instalar dependências
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y clang make curl perl unzip
+      - name: Instalar dependências
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y perl clang make lzma
 
-    - name: Instalar ldid
-      run: |
-        curl -L -o ldid.zip https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid.zip
-        unzip ldid.zip
-        sudo mv ldid /usr/local/bin/
-        sudo chmod +x /usr/local/bin/ldid
+      - name: Clonar Theos
+        run: |
+          git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "$HOME/theos/bin" >> $GITHUB_PATH
 
-    - name: Clonar Theos com submódulos
-      run: |
-        git clone --recursive https://github.com/theos/theos.git $THEOS
+      - name: Instalar ldid
+        run: |
+          curl -L -o ldid https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid
+          chmod +x ldid
+          sudo mv ldid /usr/local/bin/
 
-    - name: Baixar SDK iPhoneOS15.6
-      run: |
-        curl -L -o sdk.tar.xz https://github.com/xybp888/iOS-SDKs/releases/download/15.6/iPhoneOS15.6.sdk.tar.xz
-        mkdir -p $THEOS/sdks
-        tar -xf sdk.tar.xz -C $THEOS/sdks
+      - name: Baixar SDK (iOS 15.6 exemplo)
+        run: |
+          mkdir -p $HOME/theos/sdks
+          curl -L -o $HOME/theos/sdks/iPhoneOS15.6.sdk.tar.xz https://github.com/xybp888/iOS-SDKs/releases/download/2022/iPhoneOS15.6.sdk.tar.xz
+          tar -xf $HOME/theos/sdks/iPhoneOS15.6.sdk.tar.xz -C $HOME/theos/sdks
 
-    - name: Compilar tweak
-      run: |
-        export PATH="$THEOS/bin:$PATH"
-        make clean package
-
-    - name: Upload resultado
-      uses: actions/upload-artifact@v4
-      with:
-        name: DeviceWare.dylib
-        path: ./packages/*.deb
+      - name: Build com Theos
+        run: |
+          make clean package
+        env:
+          THEOS: ${{ env.THEOS }}
