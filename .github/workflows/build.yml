@@ -18,6 +18,17 @@ jobs:
     - name: Clonar Theos
       run: git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
 
+    - name: Baixar scripts essenciais do Theos
+      run: |
+        cd $HOME/theos/bin
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/dm.pl
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/denic.pl
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/logify.pl
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/nic.pl
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/nicify.pl
+        curl -LO https://raw.githubusercontent.com/theos/theos/master/bin/logos.pl
+        chmod +x *.pl
+
     - name: Baixar SDK iPhoneOS16.5
       run: |
         mkdir -p $HOME/theos/sdks
