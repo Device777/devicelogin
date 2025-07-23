@@ -19,7 +19,9 @@ jobs:
       run: unzip theos.zip -d $HOME
 
     - name: Atualizar dependências do Theos
-      run: $HOME/theos/bin/update-theos
+      run: |
+        chmod +x $HOME/theos/bin/update-theos
+        $HOME/theos/bin/update-theos
 
     - name: Baixar SDK iPhoneOS16.5
       run: |
