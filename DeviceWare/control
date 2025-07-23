@@ -1,0 +1,8 @@
+Package: com.deviceware.tweak
+Name: DeviceWare
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Tweak com sistema de key online via LicenseGate.
+Maintainer: DeviceWare Dev
+Author: DeviceWare Team
+Section: Tweaks
