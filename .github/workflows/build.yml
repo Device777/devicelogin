@@ -8,17 +8,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      OSXCROSS_ROOT: ${{ runner.temp }}/osxcross
+      SDK_VERSION: 16.5
+
     steps:
     - name: Checkout do repositório
       uses: actions/checkout@v4
 
-    - name: Instalar dependências
-      run: sudo apt update && sudo apt install -y perl git curl unzip xz-utils make clang lld dpkg-dev
+    - name: Instalar dependências básicas
+      run: sudo apt-get update && sudo apt-get install -y \
+        git build-essential curl clang libssl-dev libz-dev libbz2-dev libncurses5-dev libsqlite3-dev
 
-    - name: Clonar Theos (repositório oficial)
+    - name: Clonar e configurar osxcross
+      run: |
+        git clone https://github.com/tpoechtrager/osxcross.git $OSXCROSS_ROOT
+        cd $OSXCROSS_ROOT
+        # Baixar SDK do macOS (Xcode 12.4 SDK como exemplo)
+        curl -LO https://github.com/phracker/MacOSX-SDKs/releases/download/12.4/MacOSX12.4.sdk.tar.xz
+        mv MacOSX12.4.sdk.tar.xz tarballs/
+        UNATTENDED=1 ./build.sh
+
+    - name: Clonar Theos oficial
       run: git clone --recursive https://github.com/theos/theos.git $HOME/theos
 
-    - name: Copiar scripts do repositório para $THEOS/bin
+    - name: Baixar SDK iPhoneOS16.5 para Theos
+      run: |
+        mkdir -p $HOME/theos/sdks
+        curl -L -o $HOME/theos/sdks/iPhoneOS${{ env.SDK_VERSION }}.sdk.tar.xz https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS${{ env.SDK_VERSION }}.sdk.tar.xz
+        tar -xf $HOME/theos/sdks/iPhoneOS${{ env.SDK_VERSION }}.sdk.tar.xz -C $HOME/theos/sdks
+
+    - name: Instalar ldid
+      run: |
+        curl -L -o ldid https://github.com/opa334/ldid/releases/latest/download/ldid_linux_x86_64
+        chmod +x ldid
+        sudo mv ldid /usr/local/bin/
+
+    - name: Copiar scripts do Theos para $HOME/theos/bin
       run: |
         mkdir -p $HOME/theos/bin
         cp $GITHUB_WORKSPACE/dm.pl $HOME/theos/bin/
@@ -29,26 +55,22 @@ jobs:
         cp $GITHUB_WORKSPACE/logos.pl $HOME/theos/bin/
         chmod +x $HOME/theos/bin/*.pl
 
-    - name: Baixar SDK iPhoneOS16.5
-      run: |
-        mkdir -p $HOME/theos/sdks
-        curl -L -o $HOME/theos/sdks/iPhoneOS16.5.sdk.tar.xz https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS16.5.sdk.tar.xz
-        tar -xf $HOME/theos/sdks/iPhoneOS16.5.sdk.tar.xz -C $HOME/theos/sdks
-
-    - name: Instalar ldid
-      run: |
-        curl -L -o ldid https://github.com/opa334/ldid/releases/latest/download/ldid_linux_x86_64
-        chmod +x ldid
-        sudo mv ldid /usr/local/bin/
-
-    - name: Configurar variáveis de ambiente
+    - name: Configurar variáveis de ambiente para Theos + osxcross
       run: |
         echo "THEOS=$HOME/theos" >> $GITHUB_ENV
         echo "PATH=$HOME/theos/bin:$PATH" >> $GITHUB_ENV
+        echo "OSXCROSS_ROOT=$OSXCROSS_ROOT" >> $GITHUB_ENV
+        echo "THEOS_TOOLCHAIN=$OSXCROSS_ROOT" >> $GITHUB_ENV
+        echo "CC=$OSXCROSS_ROOT/target/bin/o64-clang" >> $GITHUB_ENV
+        echo "CXX=$OSXCROSS_ROOT/target/bin/o64-clang++" >> $GITHUB_ENV
 
-    - name: Compilar tweak DeviceWare
+    - name: Build tweak DeviceWare
       run: |
         export THEOS=$HOME/theos
         export PATH=$THEOS/bin:$PATH
+        export OSXCROSS_ROOT=$OSXCROSS_ROOT
+        export THEOS_TOOLCHAIN=$OSXCROSS_ROOT
+        export CC=$OSXCROSS_ROOT/target/bin/o64-clang
+        export CXX=$OSXCROSS_ROOT/target/bin/o64-clang++
         cd DeviceWare
         make clean package
