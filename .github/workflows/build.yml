@@ -12,16 +12,24 @@ jobs:
     - name: Checkout do repositório
       uses: actions/checkout@v4
 
-    - name: Instalar dependências do sistema
+    - name: Instalar dependências
       run: sudo apt update && sudo apt install -y perl git curl unzip xz-utils make clang lld dpkg-dev
 
-    - name: Descompactar Theos do zip local
-      run: unzip theos.zip -d $HOME
+    - name: Descompactar Theos enviado no repositório
+      run: |
+        unzip theos-master.zip
+        mv theos-master $HOME/theos
+
+    - name: Configurar variáveis de ambiente
+      run: |
+        echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+        echo "PATH=$HOME/theos/bin:$PATH" >> $GITHUB_ENV
 
     - name: Atualizar dependências do Theos
       run: |
         chmod +x $HOME/theos/bin/update-theos
-        $HOME/theos/bin/update-theos
+        export THEOS=$HOME/theos
+        $THEOS/bin/update-theos
 
     - name: Baixar SDK iPhoneOS16.5
       run: |
@@ -34,11 +42,6 @@ jobs:
         curl -L -o ldid https://github.com/opa334/ldid/releases/latest/download/ldid_linux_x86_64
         chmod +x ldid
         sudo mv ldid /usr/local/bin/
-
-    - name: Configurar variáveis de ambiente
-      run: |
-        echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-        echo "PATH=$HOME/theos/bin:$PATH" >> $GITHUB_ENV
 
     - name: Compilar tweak DeviceWare
       run: |
