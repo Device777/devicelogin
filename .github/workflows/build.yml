@@ -21,7 +21,7 @@ jobs:
           BUILD_DIR=build
 
     - name: Upload do artefato
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DeviceWare-dylib
         path: DeviceWare/build/Release-iphoneos/DeviceWare.dylib
